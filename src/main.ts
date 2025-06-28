@@ -108,6 +108,8 @@ function startAnalysis(): void {
 // オーディオファイルの初期化
 function initAudio(): void {
   const audioPath = `${import.meta.env.BASE_URL}ttttt.mp3`;
+  console.log("Audio path:", audioPath);
+  console.log("BASE_URL:", import.meta.env.BASE_URL);
   audioElement = new Audio(audioPath);
   audioElement.crossOrigin = "anonymous";
 
@@ -127,7 +129,7 @@ function initAudio(): void {
 }
 
 // 再生/一時停止をトグルする
-export function togglePlayPause(): void {
+export async function togglePlayPause(): Promise<void> {
   if (!audioElement) {
     console.log("Audio not ready");
     return;
@@ -136,17 +138,39 @@ export function togglePlayPause(): void {
   if (isPlaying) {
     audioElement.pause();
     isPlaying = false;
+    console.log("Audio paused");
   } else {
-    // Web Audio APIのセットアップ（初回のみ）
-    if (!audioContext) {
-      setupAudioAnalysis();
+    try {
+      // Web Audio APIのセットアップ（初回のみ）
+      if (!audioContext) {
+        console.log("Setting up audio analysis...");
+        setupAudioAnalysis();
+      }
+
+      // AudioContextが停止している場合は再開（重要：モバイル対応）
+      if (audioContext && audioContext.state === "suspended") {
+        console.log("Resuming suspended AudioContext...");
+        await audioContext.resume();
+        console.log("AudioContext resumed:", audioContext.state);
+      }
+
+      // 音声再生を試行
+      console.log("Attempting to play audio...");
+      await audioElement.play();
+      isPlaying = true;
+      console.log("Audio started successfully");
+    } catch (error) {
+      console.error("Play error:", error);
+      // 詳細なエラー情報を表示
+      if (error instanceof Error) {
+        console.error("Error name:", error.name);
+        console.error("Error message:", error.message);
+      }
+      // AudioContextの状態も確認
+      if (audioContext) {
+        console.error("AudioContext state:", audioContext.state);
+      }
     }
-    // AudioContextが停止している場合は再開
-    if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-    audioElement.play().catch((e) => console.error("Play error:", e));
-    isPlaying = true;
   }
 }
 

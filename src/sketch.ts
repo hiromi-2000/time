@@ -287,13 +287,15 @@ declare global {
   }
 }
 
-window.handleP5Touch = () => {
+window.handleP5Touch = async () => {
   if (!firstClickDone) {
-    togglePlayPause();
+    console.log("First touch detected - attempting to start audio...");
+    await togglePlayPause();
     firstClickDone = true;
     return;
   }
   // 2回目以降のタッチはテーマ変更
+  console.log("Theme change touch detected");
   const newIndex = (currentThemeIndex + 1) % colorThemes.length;
   currentThemeIndex = newIndex;
   const theme = colorThemes[currentThemeIndex];
