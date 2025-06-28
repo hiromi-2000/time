@@ -243,15 +243,9 @@ const sketch = (p: p5): void => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 
-  p.mousePressed = (): void => {
-    if (!firstClickDone) {
-      togglePlayPause();
-      firstClickDone = true;
-      return;
-    }
-    // 2回目以降のクリックはテーマ変更
-    updateTheme(currentThemeIndex + 1);
-  };
+  // p.mousePressed = (): void => {
+  //   // HTMLのタッチハンドラに置き換えたため無効化
+  // };
 
   // キーボードショートカットでパーティクルタイプを選択
   p.keyPressed = (): void => {
@@ -284,4 +278,26 @@ const sketch = (p: p5): void => {
 };
 
 // p5.jsインスタンスの作成
-new p5(sketch);
+const p5Instance = new p5(sketch);
+
+// グローバル関数として公開（iOS Safari対応）
+declare global {
+  interface Window {
+    handleP5Touch: () => void;
+  }
+}
+
+window.handleP5Touch = () => {
+  if (!firstClickDone) {
+    togglePlayPause();
+    firstClickDone = true;
+    return;
+  }
+  // 2回目以降のタッチはテーマ変更
+  const newIndex = (currentThemeIndex + 1) % colorThemes.length;
+  currentThemeIndex = newIndex;
+  const theme = colorThemes[currentThemeIndex];
+  colors = getThemeColors(p5Instance, theme);
+  particleManager.updateColors(colors);
+  p5Instance.background(theme.background);
+};

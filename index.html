@@ -26,5 +26,83 @@
   <body>
     <div id="sketch-container"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      // iOS Safari対応のタッチイベントハンドラ
+      let touchStarted = false;
+      let eventHandled = false;
+      let lastEventTime = 0;
+
+      function handleTouch() {
+        const now = Date.now();
+        // 200ms以内の重複イベントを防ぐ
+        if (eventHandled && now - lastEventTime < 200) {
+          return;
+        }
+
+        eventHandled = true;
+        lastEventTime = now;
+
+        // グローバル関数を呼び出し（TypeScriptで定義された関数）
+        if (window.handleP5Touch) {
+          window.handleP5Touch();
+        }
+
+        // 300ms後にフラグをリセット
+        setTimeout(() => {
+          eventHandled = false;
+        }, 300);
+      }
+
+      document.addEventListener(
+        "touchstart",
+        function (e) {
+          e.preventDefault(); // スクロールやズームを防ぐ
+          touchStarted = true;
+          handleTouch();
+        },
+        { passive: false }
+      );
+
+      document.addEventListener(
+        "touchend",
+        function (e) {
+          e.preventDefault();
+          // 少し遅延してからフラグをリセット
+          setTimeout(() => {
+            touchStarted = false;
+          }, 100);
+        },
+        { passive: false }
+      );
+
+      // マウスイベント（デスクトップ用）
+      document.addEventListener("click", function (e) {
+        if (!touchStarted) {
+          // タッチとマウスの重複を防ぐ
+          handleTouch();
+        }
+      });
+
+      // スクロールとズームを無効化（iOS Safari対応）
+      document.addEventListener(
+        "touchmove",
+        function (e) {
+          e.preventDefault();
+        },
+        { passive: false }
+      );
+
+      document.addEventListener("gesturestart", function (e) {
+        e.preventDefault();
+      });
+
+      document.addEventListener("gesturechange", function (e) {
+        e.preventDefault();
+      });
+
+      document.addEventListener("gestureend", function (e) {
+        e.preventDefault();
+      });
+    </script>
   </body>
 </html>
