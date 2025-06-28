@@ -22,7 +22,7 @@ export class TrailParticle extends BaseParticle {
     this.life = this.maxLife;
   }
 
-  update(p: p5, audioData?: AudioData): void {
+  update(_p: p5, _audioData?: AudioData): void {
     this.updatePosition();
     this.updateLife();
 

@@ -4,8 +4,6 @@ import type { AudioData } from "../types";
 import type { ParticleRenderer } from "./renderers";
 
 export class FireParticle extends BaseParticle {
-  private heat: number;
-  private flicker: number;
   private frameCount: number;
 
   constructor(
@@ -21,13 +19,11 @@ export class FireParticle extends BaseParticle {
     this.maxLife = p.random(30, 70);
     this.life = this.maxLife;
     this.color = this.createColorVariation(p, baseColor);
-    this.heat = p.random(0.7, 1.0);
-    this.flicker = p.random(0.8, 1.2);
     this.frameCount = 0;
     this.size = p.random(8, 20);
   }
 
-  update(p: p5, audioData?: AudioData): void {
+  update(p: p5, _audioData?: AudioData): void {
     this.frameCount++;
 
     // 炎らしい不規則な動き
@@ -44,9 +40,6 @@ export class FireParticle extends BaseParticle {
 
     // サイズが徐々に小さくなる
     this.size *= 0.99;
-
-    // 点滅効果
-    this.flicker = 0.8 + Math.sin(this.frameCount * 0.3) * 0.2;
   }
 
   private createColorVariation(p: p5, baseColor: p5.Color): p5.Color {

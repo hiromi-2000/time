@@ -107,7 +107,8 @@ function startAnalysis(): void {
 
 // オーディオファイルの初期化
 function initAudio(): void {
-  audioElement = new Audio("/ttttt.mp3");
+  const audioPath = `${import.meta.env.BASE_URL}ttttt.mp3`;
+  audioElement = new Audio(audioPath);
   audioElement.crossOrigin = "anonymous";
 
   audioElement.addEventListener("loadeddata", () => {

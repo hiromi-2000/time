@@ -25,7 +25,7 @@ export class SparkParticle extends BaseParticle {
     this.size = this.sparkSize;
   }
 
-  update(p: p5, audioData?: AudioData): void {
+  update(_p: p5, _audioData?: AudioData): void {
     // 重力の影響
     this.velocity.y += 0.1;
 

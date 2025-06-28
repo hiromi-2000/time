@@ -1,7 +1,7 @@
 import p5 from "p5";
 import { audioElement, isPlaying, getAudioData, togglePlayPause } from "./main";
 import type { AudioData } from "./types";
-import { ParticleManager, type ParticleType } from "./particles";
+import { ParticleManager } from "./particles";
 import { drawSpectrumTunnel } from "./visuals/tunnel";
 import {
   drawCentralObject,

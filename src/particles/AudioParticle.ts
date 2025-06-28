@@ -24,7 +24,7 @@ export class AudioParticle extends BaseParticle {
     this.initialSize = this.size;
   }
 
-  update(p: p5, audioData?: AudioData): void {
+  update(_p: p5, audioData?: AudioData): void {
     if (audioData) {
       // 音響データに基づいてサイズを調整
       const volumeMultiplier = 1 + audioData.volume * 2;

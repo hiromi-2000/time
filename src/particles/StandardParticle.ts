@@ -16,7 +16,7 @@ export class StandardParticle extends BaseParticle {
     this.color = this.createColorVariation(p, baseColor);
   }
 
-  update(p: p5, audioData?: AudioData): void {
+  update(_p: p5, _audioData?: AudioData): void {
     this.updatePosition();
     this.updateLife();
   }
